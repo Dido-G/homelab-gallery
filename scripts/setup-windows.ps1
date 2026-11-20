@@ -52,7 +52,7 @@ if (-not (Test-Path $GalleryPath)) {
 Write-Step 'Preparing .env'
 $envFile = Join-Path $RepoRoot '.env'
 if (Test-Path $envFile) {
-    Write-Host '  .env already exists — not overwriting'
+    Write-Host '  .env already exists - not overwriting'
 } else {
     $chars = [char[]]'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
     $rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
@@ -87,7 +87,7 @@ if (-not $SkipFirewall) {
     $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(
         [Security.Principal.WindowsBuiltInRole]::Administrator)
     if (-not $isAdmin) {
-        Write-Warn 'Not elevated — skipping. Re-run as Administrator, or add the rule yourself.'
+        Write-Warn 'Not elevated - skipping. Re-run as Administrator, or add the rule yourself.'
     } elseif (Get-NetFirewallRule -DisplayName 'Immich (2283)' -ErrorAction SilentlyContinue) {
         Write-Host '  rule already present'
     } else {
@@ -97,7 +97,7 @@ if (-not $SkipFirewall) {
     }
     $profiles = Get-NetConnectionProfile | Where-Object NetworkCategory -ne 'Private'
     foreach ($p in $profiles) {
-        Write-Warn "Network '$($p.Name)' is '$($p.NetworkCategory)', not Private — phones on it won't reach Immich."
+        Write-Warn "Network '$($p.Name)' is '$($p.NetworkCategory)', not Private - phones on it won't reach Immich."
         Write-Warn "  Fix: Settings > Network & internet > (your network) > Network profile type: Private"
     }
 }

@@ -3,7 +3,7 @@
   Update Immich to a new pinned release.
 
 .DESCRIPTION
-  Immich ships breaking changes between releases — ALWAYS read the release notes
+  Immich ships breaking changes between releases - ALWAYS read the release notes
   first: https://github.com/immich-app/immich/releases
 
   Steps this script does NOT automate (on purpose):
@@ -26,7 +26,7 @@ $RepoRoot = Split-Path -Parent $PSScriptRoot
 Set-Location $RepoRoot
 
 $envFile = Join-Path $RepoRoot '.env'
-if (-not (Test-Path $envFile)) { throw '.env not found — run scripts\setup-windows.ps1 first' }
+if (-not (Test-Path $envFile)) { throw '.env not found - run scripts\setup-windows.ps1 first' }
 
 Write-Host "Upstream files for comparison:" -ForegroundColor Cyan
 Write-Host "  https://github.com/immich-app/immich/releases/download/$Version/docker-compose.yml"
