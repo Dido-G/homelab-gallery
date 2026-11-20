@@ -1,6 +1,6 @@
 # Setup guide — Windows gallery PC
 
-Target: Windows 10 22H2+ / Windows 11, Docker Desktop on WSL 2, media on `D:\Gallery`.
+Target: Windows 10 22H2+ / Windows 11, Docker Desktop on WSL 2, media on `D:\homelab\gallery`.
 Estimated time: ~30–45 min, mostly downloads.
 
 ## 1. Prerequisites (one time)
@@ -28,7 +28,7 @@ cd C:\homelab-gallery
 ```
 
 > Prefer working inside WSL instead? Clone into `~/` in your WSL distro and set
-> `UPLOAD_LOCATION=/mnt/d/Gallery` in `.env`. Pick one side and always run
+> `UPLOAD_LOCATION=/mnt/d/homelab/gallery` in `.env`. Pick one side and always run
 > `docker compose` from there, so the paths in `.env` match.
 
 ## 3. Run the setup script
@@ -42,7 +42,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\setup-windows.ps1
 
 It will:
 - check Docker is running,
-- create `D:\Gallery`,
+- create `D:\homelab\gallery`,
 - create `.env` with a random `DB_PASSWORD` and your timezone,
 - allow inbound TCP **2283** on *Private* networks,
 - `docker compose pull` + `up -d`, and print the LAN URL.
@@ -50,7 +50,7 @@ It will:
 Doing it by hand instead:
 ```powershell
 Copy-Item .env.example .env     # then edit DB_PASSWORD and TZ
-New-Item -ItemType Directory D:\Gallery -Force
+New-Item -ItemType Directory D:\homelab\gallery -Force
 docker compose up -d
 ```
 
@@ -87,13 +87,13 @@ Then follow [mobile-setup.md](mobile-setup.md) on Dad's phone.
 ## 7. Backups — read this
 
 Phone → Immich is a **one-way backup**: once Dad deletes a photo from his phone,
-`D:\Gallery` may be the **only copy**. A single drive is not a backup.
+`D:\homelab\gallery` may be the **only copy**. A single drive is not a backup.
 
-- `D:\Gallery` holds originals, thumbnails, and Immich's automatic nightly
-  **database dumps** (`D:\Gallery\backups`). Copy the whole folder somewhere else
+- `D:\homelab\gallery` holds originals, thumbnails, and Immich's automatic nightly
+  **database dumps** (`D:\homelab\gallery\backups`). Copy the whole folder somewhere else
   regularly (USB drive, NAS or cloud — e.g. a weekly `robocopy /MIR` job).
 - The live database is in the Docker volume `pgdata` (inside Docker Desktop's
-  disk image on C:). As long as the dumps in `D:\Gallery\backups` are kept, it can be
+  disk image on C:). As long as the dumps in `D:\homelab\gallery\backups` are kept, it can be
   restored: <https://docs.immich.app/administration/backup-and-restore>.
 - **Never** run `docker compose down -v` — `-v` deletes `pgdata`.
 

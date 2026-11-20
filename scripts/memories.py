@@ -14,7 +14,7 @@ Config (env vars, or read from the repo's .env if unset):
 Usage:
     python scripts/memories.py                       # today, writes scripts/output/memories.json
     python scripts/memories.py --date 2026-07-04     # a specific day
-    python scripts/memories.py --years 20 --out D:/Gallery-feeds/memories.json
+    python scripts/memories.py --years 20 --out D:/homelab/gallery-feeds/memories.json
 
 Schedule nightly on Windows (Task Scheduler), e.g.:
     schtasks /Create /TN "Immich Memories" /SC DAILY /ST 06:00 ^

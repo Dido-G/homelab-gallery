@@ -39,6 +39,6 @@ frontend/                 Phase 2 placeholder
 
 | Data | Where | Notes |
 |---|---|---|
-| Photos/videos | `D:\Gallery` (bind mount) | Owned by Immich — don't edit by hand. **Back it up elsewhere.** |
-| Postgres | Docker named volume `pgdata` | Not on NTFS, on purpose. Nightly dumps land in `D:\Gallery\backups`. |
+| Photos/videos | `D:\homelab\gallery` (bind mount) | Owned by Immich — don't edit by hand. **Back it up elsewhere.** |
+| Postgres | Docker named volume `pgdata` | Not on NTFS, on purpose. Nightly dumps land in `D:\homelab\gallery\backups`. |
 | ML models | Docker volume `model-cache` | Re-downloadable. |

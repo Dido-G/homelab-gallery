@@ -4,7 +4,7 @@
 
 .DESCRIPTION
   - Checks Docker Desktop is installed and running
-  - Creates the media folder (default D:\Gallery)
+  - Creates the media folder (default D:\homelab\gallery)
   - Creates .env from .env.example with a random DB password and your timezone
   - Adds a Windows Firewall rule for TCP 2283 on Private networks (needs admin)
   - Pulls images and starts the stack
@@ -17,7 +17,7 @@
 #>
 [CmdletBinding()]
 param(
-    [string]$GalleryPath = 'D:\Gallery',
+    [string]$GalleryPath = 'D:\homelab\gallery',
     [switch]$SkipFirewall
 )
 

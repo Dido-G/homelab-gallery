@@ -9,7 +9,7 @@
 #      bind mount. NTFS bind mounts break Postgres permissions/fsync semantics.
 #   2. The `/etc/localtime` mount is removed (it is meaningless on Windows);
 #      set TZ in .env instead.
-#   3. Media (UPLOAD_LOCATION) is bind-mounted from D:\Gallery via .env.
+#   3. Media (UPLOAD_LOCATION) is bind-mounted from D:\homelab\gallery via .env.
 #
 # Everything else (images, digests, healthchecks) is identical to upstream.
 # Upstream warning: always use the compose file from the *current release*.
@@ -24,7 +24,7 @@ services:
     #   file: hwaccel.transcoding.yml
     #   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
     volumes:
-      # Media library. Set UPLOAD_LOCATION in .env (e.g. D:/Gallery). Do not edit this line.
+      # Media library. Set UPLOAD_LOCATION in .env (e.g. D:/homelab/gallery). Do not edit this line.
       - ${UPLOAD_LOCATION}:/data
     env_file:
       - .env

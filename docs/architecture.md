@@ -14,8 +14,8 @@
 │     └──────────────────► immich_postgres (PG14 + VectorChord)               │
 │     │                         └─ named volume: pgdata  (in WSL VHDX on C:)  │
 │     ▼                                                                       │
-│  bind mount  D:\Gallery  ⇄  /data   (originals, thumbnails, encoded video,  │
-│                                      nightly DB dumps in backups/)          │
+│  bind mount  D:\homelab\gallery  ⇄  /data  (originals, thumbnails,          │
+│                                     encoded video, DB dumps in backups/)    │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -25,10 +25,10 @@
 |---|---|
 | Official Immich compose, minimal diff | Easy upgrades; the header of `docker-compose.yml` lists every local change. |
 | Postgres in named volume `pgdata` | NTFS bind mounts via Docker Desktop don't keep the Unix permissions / fsync behaviour Postgres needs → permission errors or corruption. |
-| Media on `D:\Gallery` bind mount | Big drive, files visible from Windows. Slower than a volume (crosses the WSL file-share boundary) — fine for a family gallery. |
+| Media on `D:\homelab\gallery` bind mount | Big drive, files visible from Windows. Slower than a volume (crosses the WSL file-share boundary) — fine for a family gallery. |
 | `/etc/localtime` mount removed, `TZ` in `.env` | That file doesn't exist on Windows. |
 | `IMMICH_VERSION` pinned to an exact tag | PC is unattended and on-demand; updates happen deliberately via `scripts/update.ps1`. |
-| One-way backup | Phone deletions don't propagate, so `D:\Gallery` must itself be backed up elsewhere. |
+| One-way backup | Phone deletions don't propagate, so `D:\homelab\gallery` must itself be backed up elsewhere. |
 | On-demand host | Mobile app queues uploads; nothing is lost while the PC is off. |
 
 ## Phase 2 — custom frontend
@@ -43,7 +43,7 @@
 - REST API only (OpenAPI docs at `http://<PC-IP>:2283/doc`): search/timeline
   (`/api/search/metadata`), thumbnails (`/api/assets/{id}/thumbnail`), GPS
   (`exifInfo.latitude/longitude`, `/api/map/markers`), upload (`POST /api/assets`).
-- **Never** reads or writes `D:\Gallery` directly — Immich's layout is internal and
+- **Never** reads or writes `D:\homelab\gallery` directly — Immich's layout is internal and
   can change between versions.
 - `scripts/memories.py` runs nightly (Task Scheduler) and writes a JSON feed the
   slideshow uses. (Immich's own app/UI also has a built-in memories feature.)

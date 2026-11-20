@@ -12,7 +12,7 @@ phone deletions never remove anything from the gallery.
 - `docker-compose.yml` is the **official Immich release compose** with a minimal,
   documented diff (listed in its header). Keep it that way:
   - Postgres → Docker **named volume `pgdata`**. Never switch it to an NTFS/`D:\` bind mount.
-  - Media → `UPLOAD_LOCATION` = `D:/Gallery` (or `/mnt/d/Gallery` from WSL), bind-mounted to `/data`.
+  - Media → `UPLOAD_LOCATION` = `D:/homelab/gallery` (or `/mnt/d/homelab/gallery` from WSL), bind-mounted to `/data`.
   - No `/etc/localtime` mount; timezone comes from `TZ` in `.env`.
   - `IMMICH_VERSION` is pinned to an exact tag. When upgrading, re-sync image tags and
     digests from that release's `docker-compose.yml` / `example.env` and update the header.

@@ -5,7 +5,7 @@ Phase 1 is getting Immich itself running and backing up the phone.
 
 ## Rules
 - Talk to Immich only through `/api/*` with an API key (or a user session).
-- Never read or write `UPLOAD_LOCATION` (`D:\Gallery`) directly — Immich owns it.
+- Never read or write `UPLOAD_LOCATION` (`D:\homelab\gallery`) directly — Immich owns it.
 - Never commit the API key. Read it from config at runtime / build time.
 
 ## Planned features
