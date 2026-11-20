@@ -1,0 +1,33 @@
+# Secrets
+.env
+*.env
+!.env.example
+
+# Never commit media or database data, even if pointed inside the repo by mistake
+library/
+postgres/
+Gallery/
+
+# Generated output
+scripts/output/
+memories*.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Node / frontend (Phase 2)
+node_modules/
+frontend/dist/
+frontend/build/
+frontend/.vite/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp

@@ -1,0 +1,86 @@
+#
+# homelab-gallery — Immich stack for a Windows 11 PC (Docker Desktop + WSL 2)
+#
+# Based on the official Immich release compose file (v3.4.2):
+#   https://github.com/immich-app/immich/releases/latest/download/docker-compose.yml
+#
+# Local changes vs. upstream (keep this list current when you re-sync):
+#   1. Postgres data lives in a Docker *named volume* (`pgdata`) instead of a
+#      bind mount. NTFS bind mounts break Postgres permissions/fsync semantics.
+#   2. The `/etc/localtime` mount is removed (it is meaningless on Windows);
+#      set TZ in .env instead.
+#   3. Media (UPLOAD_LOCATION) is bind-mounted from D:\Gallery via .env.
+#
+# Everything else (images, digests, healthchecks) is identical to upstream.
+# Upstream warning: always use the compose file from the *current release*.
+
+name: immich
+
+services:
+  immich-server:
+    container_name: immich_server
+    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+    # extends:
+    #   file: hwaccel.transcoding.yml
+    #   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
+    volumes:
+      # Media library. Set UPLOAD_LOCATION in .env (e.g. D:/Gallery). Do not edit this line.
+      - ${UPLOAD_LOCATION}:/data
+    env_file:
+      - .env
+    ports:
+      - '2283:2283'
+    depends_on:
+      - redis
+      - database
+    restart: always
+    healthcheck:
+      disable: false
+
+  immich-machine-learning:
+    container_name: immich_machine_learning
+    # For hardware acceleration, add one of -[armnn, cuda, rocm, openvino, rknn] to the image tag.
+    # Example tag: ${IMMICH_VERSION:-release}-cuda
+    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
+    # extends: # uncomment for hardware acceleration - see https://docs.immich.app/features/ml-hardware-acceleration
+    #   file: hwaccel.ml.yml
+    #   service: cpu # set to one of [armnn, cuda, rocm, openvino, openvino-wsl, rknn] - use the `-wsl` variant on WSL2
+    volumes:
+      - model-cache:/cache
+    env_file:
+      - .env
+    environment:
+      MACHINE_LEARNING_MODEL_REVISION: v2
+    restart: always
+    healthcheck:
+      disable: false
+
+  redis:
+    container_name: immich_redis
+    image: docker.io/valkey/valkey:9@sha256:418652cfb58ef879d4978c33553735d7147016032d5aefaa14c828e611eb9dfd
+    healthcheck:
+      test: redis-cli ping | grep -q PONG || exit 1
+    restart: always
+
+  database:
+    container_name: immich_postgres
+    image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0@sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_DB: ${DB_DATABASE_NAME}
+      POSTGRES_INITDB_ARGS: '--data-checksums'
+      # The named volume lives inside Docker Desktop's WSL VHDX (normally on C:, an SSD).
+      # Uncomment only if you move Docker's disk image to a spinning HDD.
+      # DB_STORAGE_TYPE: 'HDD'
+    volumes:
+      # Named volume — NOT a Windows bind mount. See header note (1).
+      - pgdata:/var/lib/postgresql/data
+    shm_size: 128mb
+    restart: always
+    healthcheck:
+      disable: false
+
+volumes:
+  model-cache:
+  pgdata:
