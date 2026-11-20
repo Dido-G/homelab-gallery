@@ -60,12 +60,30 @@ if (Test-Path $envFile) {
     $rng.GetBytes($bytes)
     $password = -join ($bytes | ForEach-Object { $chars[$_ % $chars.Length] })
 
-    # Windows timezone -> IANA (works on PowerShell 7 / .NET 6+; falls back to UTC)
+    # Windows timezone -> IANA. .NET 6+ (PowerShell 7) has a built-in converter;
+    # Windows PowerShell 5.1 (.NET Framework) does not, so fall back to the ICU
+    # library that ships with Windows 10 1903+ / Windows 11 (icu.dll).
     $tz = 'Etc/UTC'
-    try {
-        $iana = $null
-        if ([System.TimeZoneInfo]::TryConvertWindowsIdToIanaId((Get-TimeZone).Id, [ref]$iana)) { $tz = $iana }
-    } catch { Write-Warn "Could not detect IANA timezone; set TZ in .env manually (now $tz)" }
+    $winTz = (Get-TimeZone).Id
+    $iana = $null
+    if ([System.TimeZoneInfo].GetMethod('TryConvertWindowsIdToIanaId', [type[]]@([string], [string].MakeByRefType()))) {
+        [void][System.TimeZoneInfo]::TryConvertWindowsIdToIanaId($winTz, [ref]$iana)
+    } else {
+        try {
+            Add-Type -Namespace HomelabGallery -Name Icu -MemberDefinition @'
+[DllImport("icu.dll", CharSet = CharSet.Unicode)]
+public static extern int ucal_getTimeZoneIDForWindowsID(string winid, int len,
+    [MarshalAs(UnmanagedType.LPStr)] string region, System.Text.StringBuilder id, int cap, ref int status);
+'@
+            $region = [System.Globalization.RegionInfo]::CurrentRegion.TwoLetterISORegionName
+            $sb = New-Object System.Text.StringBuilder 128
+            $status = 0
+            $len = [HomelabGallery.Icu]::ucal_getTimeZoneIDForWindowsID($winTz, -1, $region, $sb, $sb.Capacity, [ref]$status)
+            if ($status -le 0 -and $len -gt 0) { $iana = $sb.ToString() }
+        } catch { }
+    }
+    if ($iana) { $tz = $iana }
+    else { Write-Warn "Could not map Windows timezone '$winTz' to IANA; set TZ in .env manually (now $tz)" }
 
     $uploadPath = $GalleryPath -replace '\\', '/'
     $content = (Get-Content (Join-Path $RepoRoot '.env.example')) | ForEach-Object {
