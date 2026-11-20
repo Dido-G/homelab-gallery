@@ -131,9 +131,12 @@ if ($LASTEXITCODE -ne 0) { throw 'docker compose up failed' }
 
 docker compose ps
 
-$ips = Get-NetIPAddress -AddressFamily IPv4 |
-    Where-Object { $_.IPAddress -notlike '127.*' -and $_.IPAddress -notlike '169.254.*' -and $_.InterfaceAlias -notmatch 'vEthernet|WSL|Loopback' } |
-    Select-Object -ExpandProperty IPAddress
+# Only adapters with a default gateway are on the real LAN; this skips
+# host-only adapters (VirtualBox/VMware/Hyper-V/WSL) that would print bogus URLs.
+$ips = Get-NetIPConfiguration |
+    Where-Object { $_.IPv4DefaultGateway -and $_.NetAdapter.Status -eq 'Up' } |
+    ForEach-Object { $_.IPv4Address.IPAddress } |
+    Where-Object { $_ -and $_ -notlike '169.254.*' }
 
 Write-Host ''
 Write-Host 'Immich is starting (first boot can take a minute).' -ForegroundColor Green
