@@ -12,6 +12,16 @@ the public internet**: no router port-forwarding, no Tailscale Funnel.
 
 The PC still has to be on. Uploads wait on the phone until it's reachable.
 
+## Tailnet devices
+
+| Device | OS | Tailscale IP | Role |
+|---|---|---|---|
+| `desktop-q31j5nm` | Windows 11 | `100.110.169.89` | Immich host (unattended service) |
+| `dido-s-pc` | Linux | `100.70.18.86` | Client: browser access and repo work |
+
+Phones join the same tailnet with the Tailscale app. Check who is connected with
+`tailscale status`.
+
 ## How it works on the PC
 
 - Tailscale is installed for all users and runs as a Windows service in
@@ -48,8 +58,24 @@ revoke them after use, and never commit them or paste them into docs.
 
 Keep backup set to **Wi-Fi only** unless mobile-data uploads are wanted.
 
+## Linux client (`dido-s-pc`)
+
+- Open `http://100.110.169.89:2283` in a browser while Tailscale is up.
+- To check the connection: `tailscale ping 100.110.169.89` and
+  `curl http://100.110.169.89:2283/api/server/ping`, which should return `{"res":"pong"}`.
+
+## Claude Code workflow
+
+- Claude Code (the CLI) runs on the Windows host in `C:\homelab-gallery`, where it can
+  reach Docker, `.env` and `D:\`. It follows [CLAUDE.md](../CLAUDE.md).
+- `/remote-control` in a running session lets you follow and steer it from another
+  device. The work still runs on the host.
+- Changes reach GitHub only through reviewed commits. Pull them on other machines with
+  `git pull`.
+
 ## Rules
 
 - No router port-forwarding, and no Tailscale Funnel or other public exposure.
+- Never commit auth keys, or paste them into docs or chat. Rotate any key that was.
 - To cut off a lost device, remove it in the Tailscale admin console.
 - If the PC's Tailscale IP ever changes, update this page and the phone apps.

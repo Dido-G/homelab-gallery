@@ -99,13 +99,16 @@ Phone → Immich is a **one-way backup**: once Dad deletes a photo from his phon
 
 ## 8. Optional tuning
 
-- **RAM**: machine learning can use a few GB. To cap WSL, create
-  `%UserProfile%\.wslconfig`:
+- **RAM**: machine learning can use a few GB. This PC caps WSL with
+  `%UserProfile%\.wslconfig` (a hidden file):
   ```ini
   [wsl2]
-  memory=8GB
+  memory=6GB
+  maxCrashDumpCount=-1
   ```
-  then `wsl --shutdown` and restart Docker Desktop.
+  then `wsl --shutdown` and restart Docker Desktop. During big imports, pausing
+  Immich's metadata, thumbnail and ML queues (Administration → Jobs) keeps the hard
+  drive free for uploads. Resume them afterwards.
 - **GPU acceleration**: see the `extends:` comments in `docker-compose.yml`. On WSL use
   the `-wsl` variants (`vaapi-wsl`, `openvino-wsl`) or `nvenc`/`cuda` for NVIDIA. Requires
   downloading the `hwaccel.*.yml` files from the same Immich release into this folder.
@@ -114,7 +117,7 @@ Phone → Immich is a **one-way backup**: once Dad deletes a photo from his phon
 
 | Symptom | Check |
 |---|---|
-| Phone can't connect | Same Wi-Fi? Network profile Private? Does `http://<ip>:2283` load in the phone's browser? |
+| Phone can't connect | Same Wi-Fi? Network profile Private? Does `http://<ip>:2283` load in the phone's browser? Away from home: is Tailscale on? See [remote-access.md](remote-access.md). |
 | `immich_postgres` restarting | `docker compose logs database`. Make sure the DB is on `pgdata`, not a `D:\` path. |
 | Empty `UPLOAD_LOCATION` error | `.env` missing, or not in the folder you ran `docker compose` from. |
 | Wrong photo times | `TZ` in `.env`, then `docker compose up -d` to apply. |

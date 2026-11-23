@@ -11,7 +11,10 @@ on. If the PC is off, they wait on the phone and go up next time.
    *Tip:* open that URL in the phone's browser first to confirm it loads.
    Away from home, use Tailscale and `http://100.110.169.89:2283` instead
    (see [remote-access.md](remote-access.md)).
-3. Sign in with **Dad's** Immich account (not the admin one).
+3. Sign in with the person's **own** Immich account: Dido, Kiko, Marti or Asya.
+   Photos then land in `library/<Name>/` and stay separate per person.
+4. Turn on **Settings → Networking → Automatic URL switching**, so the app uses the LAN
+   URL on home Wi-Fi and `http://100.110.169.89:2283` (Tailscale app on) elsewhere.
 
 ## 2. Turn on backup
 
