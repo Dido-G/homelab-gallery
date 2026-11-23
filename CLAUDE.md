@@ -60,6 +60,9 @@ After completing a task, make **clean, focused Conventional Commits**:
 - `chore:` config, tooling, dependency/version bumps (e.g. `chore: bump Immich to v3.5.0`)
 - Optional scope: `feat(frontend): ...`, `docs(setup): ...`
 
+**Never add Claude attribution** to commits or PRs: no `Co-Authored-By: Claude`
+trailer, no `Claude-Session:` line, and no "Generated with Claude Code" footer.
+
 One logical change per commit; imperative, lower-case subject ≤ 72 chars. Before
 committing, run `git status` / `git diff --cached` and confirm no `.env` or secrets
 are staged.
