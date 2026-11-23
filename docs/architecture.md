@@ -50,5 +50,7 @@
 
 ## Exposure
 
-LAN only. Port 2283 is allowed on Windows *Private* networks only. Don't port-forward
-it on the router; if remote access is ever needed, use a VPN (Tailscale/WireGuard).
+Private only: the home LAN plus **Tailscale** (`http://100.110.169.89:2283`). Port 2283
+is allowed on Windows *Private* networks only, and the Tailscale adapter is one of
+them. Nothing is exposed to the public internet: no router port-forwarding and no
+Tailscale Funnel. See [remote-access.md](remote-access.md).

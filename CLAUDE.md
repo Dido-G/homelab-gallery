@@ -29,7 +29,9 @@ phone deletions never remove anything from the gallery.
 - Never commit `.env`, API keys, passwords, or any media/database data. Only `.env.example`
   (with placeholder values) is tracked.
 - Never suggest `docker compose down -v` (it deletes `pgdata`).
-- Keep the service LAN-only; no router port-forwarding advice.
+- Keep the service private: LAN plus Tailscale only (`http://100.110.169.89:2283`, see
+  `docs/remote-access.md`). Never expose it to the public internet: no router
+  port-forwarding advice, no Tailscale Funnel. Never commit Tailscale auth keys.
 
 ## Commits
 After completing a task, make **clean, focused Conventional Commits**:

@@ -9,6 +9,8 @@ on. If the PC is off, they wait on the phone and go up next time.
 2. Server URL: `http://<PC-IP>:2283` — the LAN address printed by
    `setup-windows.ps1` (e.g. `http://192.168.1.50:2283`).
    *Tip:* open that URL in the phone's browser first to confirm it loads.
+   Away from home, use Tailscale and `http://100.110.169.89:2283` instead
+   (see [remote-access.md](remote-access.md)).
 3. Sign in with **Dad's** Immich account (not the admin one).
 
 ## 2. Turn on backup
